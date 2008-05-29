@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,11 @@ public class LayoutHandlerInterceptor extends HandlerInterceptorAdapter {
     {
         if (mav == null) { return; }
 
-        if (mav.getViewName().startsWith("redirect:")) { return; }
+        if (mav.getView() instanceof RedirectView) { return; }
+
+        String viewName = mav.getViewName();
+        if (viewName != null && viewName.startsWith("redirect:")) { return; }
+
 
         if (log.isDebugEnabled()) {
             log.debug("Setting view to default: " + this.defaultViewName);

@@ -8,18 +8,33 @@ import javax.servlet.http.HttpServletRequest;
 public class FlashUtils {
     private static final Log log = LogFactory.getLog(FlashUtils.class);
 
-    public static void flashMessage(String code, HttpServletRequest request, Object... args) {
+    public static void messageCode(String code, HttpServletRequest request, Object... args) {
         Flash flash = (Flash) request.getSession().getAttribute("flash");
         flash.addMessage(RequestUtils.getRequestContext(request).getMessage(code, args, code));
     }
 
-    public static void flashWarning(String code, HttpServletRequest request, Object... args) {
+    public static void warningCode(String code, HttpServletRequest request, Object... args) {
         Flash flash = (Flash) request.getSession().getAttribute("flash");
         flash.addWarning(RequestUtils.getRequestContext(request).getMessage(code, args, code));
     }
 
-    public static void flashError(String code, HttpServletRequest request, Object... args) {
+    public static void errorCode(String code, HttpServletRequest request, Object... args) {
         Flash flash = (Flash) request.getSession().getAttribute("flash");
         flash.addError(RequestUtils.getRequestContext(request).getMessage(code, args, code));
+    }
+
+    public static void message(String msg, HttpServletRequest request, Object... args) {
+        Flash flash = (Flash) request.getSession().getAttribute("flash");
+        flash.addMessage(RequestUtils.getRequestContext(request).getMessage(msg, args, msg));
+    }
+
+    public static void warning(String msg, HttpServletRequest request, Object... args) {
+        Flash flash = (Flash) request.getSession().getAttribute("flash");
+        flash.addWarning(RequestUtils.getRequestContext(request).getMessage(msg, args, msg));
+    }
+
+    public static void error(String msg, HttpServletRequest request, Object... args) {
+        Flash flash = (Flash) request.getSession().getAttribute("flash");
+        flash.addError(RequestUtils.getRequestContext(request).getMessage(msg, args, msg));
     }
 }

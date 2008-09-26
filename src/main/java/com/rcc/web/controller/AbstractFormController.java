@@ -56,7 +56,7 @@ public abstract class AbstractFormController
         throws Exception
     {
         if (errors.hasErrors()) {
-            FlashUtils.flashError("validation.fail", request);
+            FlashUtils.errorCode("validation.fail", request);
             return this.showForm(request, response, errors);
         }
 

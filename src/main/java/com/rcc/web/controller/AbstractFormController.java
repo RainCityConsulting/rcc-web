@@ -31,6 +31,7 @@ public abstract class AbstractFormController
             BindException errors)
         throws Exception
     {
+        // The view will be set with the LayoutHandlerInterceptor
         return this.showForm(request, errors, null);
     }
 

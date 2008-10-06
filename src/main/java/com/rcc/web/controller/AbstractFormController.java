@@ -66,20 +66,4 @@ public abstract class AbstractFormController
     protected abstract ModelAndView internalProcessFormSubmission(HttpServletRequest request,
             HttpServletResponse response, Object command, BindException errors)
         throws Exception;
-
-    protected int getRequestIntParameter(HttpServletRequest request, String name) {
-        String idStr = request.getParameter(name);
-        if (idStr == null) {
-            throw new RuntimeException("Request parameter is null: " + name);
-        }
-
-        int val = 0;
-        try {
-            val = Integer.parseInt(idStr);
-        } catch (NumberFormatException e) {
-            throw new RuntimeException("Request parameter is malformed: " + idStr);
-        }
-
-        return val;
-    }
 }

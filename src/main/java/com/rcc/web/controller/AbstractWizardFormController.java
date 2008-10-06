@@ -1,4 +1,4 @@
-package com.rcc.store.admin.web.controller;
+package com.rcc.web.controller;
 
 import com.rcc.web.FlashUtils;
 import com.rcc.web.View;

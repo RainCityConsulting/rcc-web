@@ -46,7 +46,8 @@ public abstract class AbstractEditController extends AbstractFormController {
 
     protected abstract Identifiable formExistingBackingObject(int id) throws Exception;
 
-    protected void referenceData(Map map, HttpServletRequest request, Object command, Errors errors)
+    protected final void referenceData(Map map, HttpServletRequest request, Object command,
+            Errors errors)
         throws Exception
     {
         Identifiable id = (Identifiable) command;
@@ -59,7 +60,13 @@ public abstract class AbstractEditController extends AbstractFormController {
             map.put("content", this.getEditContent());
         }
 
-        super.referenceData(map, request, command, errors);
+        this.internalReferenceData(map, request, command, errors);
+    }
+
+    protected void internalReferenceData(Map map, HttpServletRequest request, Object command,
+            Errors errors)
+        throws Exception
+    {
         this.referenceData(map);
     }
 

@@ -35,7 +35,7 @@ public abstract class AbstractFormController
         return this.showForm(request, errors, null);
     }
 
-    protected Map referenceData(HttpServletRequest request, Object command, Errors errors)
+    protected final Map referenceData(HttpServletRequest request, Object command, Errors errors)
         throws Exception
     {
         Map map = new HashMap();

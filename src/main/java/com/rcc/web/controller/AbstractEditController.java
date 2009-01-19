@@ -35,14 +35,27 @@ public abstract class AbstractEditController extends AbstractFormController {
         int id = ControllerUtils.getIntParam(request, "id", 0);
         if (id == 0) {
             // Create
-            return this.formNewBackingObject();
+            return this.formNewBackingObject(request);
         } else {
             // Update
             return this.formExistingBackingObject(id);
         }
     }
 
-    protected abstract Identifiable formNewBackingObject() throws Exception;
+    /**
+     * This implementation calls formNewBackingObject(). Implementations can override this method
+     * if the HttpServletRequest is required.
+     */
+    protected Identifiable formNewBackingObject(HttpServletRequest request) throws Exception {
+        return this.formNewBackingObject();
+    }
+
+    /**
+     * Returns null.
+     */
+    protected Identifiable formNewBackingObject() throws Exception {
+        return null;
+    }
 
     protected abstract Identifiable formExistingBackingObject(int id) throws Exception;
 

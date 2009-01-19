@@ -22,7 +22,7 @@ public class AutoCompleteController<T> extends MultiActionController {
     public ModelAndView search(HttpServletRequest request, HttpServletResponse response)
         throws Exception
     {
-        String query = request.getParameter("q");
+        String query = this.cleanQuery(request.getParameter("q"));
         int limit = ControllerUtils.getIntParam(request, "limit", 10);
 
         SearchResults<T> results = this.reader.parseAndSearch(
@@ -41,5 +41,19 @@ public class AutoCompleteController<T> extends MultiActionController {
         }
 
         return null;
+    }
+
+    private String cleanQuery(String q) {
+        if (q == null) { return ""; }
+
+        if (q.indexOf('[') >= 0) {
+            q = q.substring(0, q.indexOf('['));
+        }
+
+        if (q.indexOf(']') >= 0) {
+            q = q.substring(0, q.indexOf(']'));
+        }
+
+        return q;
     }
 }

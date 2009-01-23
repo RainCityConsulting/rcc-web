@@ -15,9 +15,14 @@ public class LayoutHandlerInterceptor extends HandlerInterceptorAdapter {
     private static final Log log = LogFactory.getLog(LayoutHandlerInterceptor.class);
 
     private String defaultViewName;
+    private boolean force;
 
     public void setDefaultViewName(String defaultViewName) {
         this.defaultViewName = defaultViewName;
+    }
+
+    public void setForce(boolean force) {
+        this.force = force;
     }
 
     public void postHandle(HttpServletRequest request, HttpServletResponse response,
@@ -31,6 +36,7 @@ public class LayoutHandlerInterceptor extends HandlerInterceptorAdapter {
         String viewName = mav.getViewName();
         if (viewName != null && viewName.startsWith("redirect:")) { return; }
 
+        if (!force && (viewName != null || mav.getView() != null)) { return; }
 
         if (log.isDebugEnabled()) {
             log.debug("Setting view to default: " + this.defaultViewName);

@@ -18,15 +18,27 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AutoCompleteController<T> extends MultiActionController {
     private IndexReader<T> reader;
+    private int defaultLimit = 10;
+    private boolean escapeQuery = true;
+    private boolean autoPrefix = true;
+    private int autoPrefixMinLength = 3;
+
+    public void setDefaultLimit(int defaultLimit) { this.defaultLimit = defaultLimit; }
+    public void setEscapeQuery(boolean escapeQuery) { this.escapeQuery = escapeQuery; }
+    public void setAutoPrefix(boolean autoPrefix) { this.autoPrefix = autoPrefix; }
+
+    public void setAutoPrefixMinLength(int autoPrefixMinLength) {
+        this.autoPrefixMinLength = autoPrefixMinLength;
+    }
 
     public ModelAndView search(HttpServletRequest request, HttpServletResponse response)
         throws Exception
     {
         String query = this.cleanQuery(request.getParameter("q"));
-        int limit = ControllerUtils.getIntParam(request, "limit", 10);
+        int limit = ControllerUtils.getIntParam(request, "limit", this.defaultLimit);
 
         SearchResults<T> results = this.reader.parseAndSearch(
-                query, 0, limit, true, true, 3);
+                query, 0, limit, this.escapeQuery, this.autoPrefix, this.autoPrefixMinLength);
 
         ServletOutputStream os = null;
         try {

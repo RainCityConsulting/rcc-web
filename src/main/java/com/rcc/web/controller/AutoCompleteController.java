@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AutoCompleteController<T> extends MultiActionController {
+    private static final Log log = LogFactory.getLog(AutoCompleteController.class);
+
     private IndexReader<T> reader;
     private int defaultLimit = 10;
     private boolean escapeQuery = true;
@@ -31,14 +33,24 @@ public class AutoCompleteController<T> extends MultiActionController {
         this.autoPrefixMinLength = autoPrefixMinLength;
     }
 
+    public void setIndexReader(IndexReader<T> reader) {
+        this.reader = reader;
+    }
+
     public ModelAndView search(HttpServletRequest request, HttpServletResponse response)
         throws Exception
     {
         String query = this.cleanQuery(request.getParameter("q"));
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Query after cleaning: [%s]", query));
+        }
         int limit = ControllerUtils.getIntParam(request, "limit", this.defaultLimit);
 
         SearchResults<T> results = this.reader.parseAndSearch(
                 query, 0, limit, this.escapeQuery, this.autoPrefix, this.autoPrefixMinLength);
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Found %d results", results.getHitCount()));
+        }
 
         ServletOutputStream os = null;
         try {

@@ -17,16 +17,18 @@ import java.util.List;
 public class HistoryHandlerInterceptor extends HandlerInterceptorAdapter {
     private static final Log log = LogFactory.getLog(HistoryHandlerInterceptor.class);
 
+    public static final String attrName = HistoryHandlerInterceptor.class.getName() + ".history";
+
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
             Object handler)
         throws Exception
     {
         HttpSession session = request.getSession();
         if (session == null) { return true; }
-        List<View> history = (List<View>) session.getAttribute("history");
+        List<View> history = (List<View>) session.getAttribute(attrName);
         if (history == null) {
             history = new ArrayList<View>();
-            session.setAttribute("history", history);
+            session.setAttribute(attrName, history);
         }
         history.add(new View(request));
         return true;
@@ -44,7 +46,7 @@ public class HistoryHandlerInterceptor extends HandlerInterceptorAdapter {
 
             HttpSession session = request.getSession();
             if (session == null) { return; }
-            List<View> history = (List<View>) session.getAttribute("history");
+            List<View> history = (List<View>) session.getAttribute(attrName);
             if (history == null || history.isEmpty()) { return; }
 
             int idx = history.size() - 1;

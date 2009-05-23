@@ -23,18 +23,18 @@ public class FlashUtils {
         flash.addError(RequestUtils.getRequestContext(request).getMessage(code, args, code));
     }
 
-    public static void message(String msg, HttpServletRequest request, Object... args) {
+    public static void message(String msg, HttpServletRequest request) {
         Flash flash = (Flash) request.getSession().getAttribute("flash");
-        flash.addMessage(RequestUtils.getRequestContext(request).getMessage(msg, args, msg));
+        flash.addMessage(msg);
     }
 
-    public static void warning(String msg, HttpServletRequest request, Object... args) {
+    public static void warning(String msg, HttpServletRequest request) {
         Flash flash = (Flash) request.getSession().getAttribute("flash");
-        flash.addWarning(RequestUtils.getRequestContext(request).getMessage(msg, args, msg));
+        flash.addWarning(msg);
     }
 
-    public static void error(String msg, HttpServletRequest request, Object... args) {
+    public static void error(String msg, HttpServletRequest request) {
         Flash flash = (Flash) request.getSession().getAttribute("flash");
-        flash.addError(RequestUtils.getRequestContext(request).getMessage(msg, args, msg));
+        flash.addError(msg);
     }
 }

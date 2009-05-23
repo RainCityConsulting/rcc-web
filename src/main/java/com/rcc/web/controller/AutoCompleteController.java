@@ -25,16 +25,13 @@ public class AutoCompleteController<T> extends MultiActionController {
     private boolean autoPrefix = true;
     private int autoPrefixMinLength = 3;
 
+    public void setIndexReader(IndexReader<T> reader) { this.reader = reader; }
     public void setDefaultLimit(int defaultLimit) { this.defaultLimit = defaultLimit; }
     public void setEscapeQuery(boolean escapeQuery) { this.escapeQuery = escapeQuery; }
     public void setAutoPrefix(boolean autoPrefix) { this.autoPrefix = autoPrefix; }
 
     public void setAutoPrefixMinLength(int autoPrefixMinLength) {
         this.autoPrefixMinLength = autoPrefixMinLength;
-    }
-
-    public void setIndexReader(IndexReader<T> reader) {
-        this.reader = reader;
     }
 
     public ModelAndView search(HttpServletRequest request, HttpServletResponse response)
@@ -45,9 +42,14 @@ public class AutoCompleteController<T> extends MultiActionController {
             log.debug(String.format("Query after cleaning: [%s]", query));
         }
         int limit = ControllerUtils.getIntParam(request, "limit", this.defaultLimit);
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Cleaned query: [%s]", query));
+            log.debug(String.format("Limit: %d", limit));
+        }
 
         SearchResults<T> results = this.reader.parseAndSearch(
                 query, 0, limit, this.escapeQuery, this.autoPrefix, this.autoPrefixMinLength);
+
         if (log.isDebugEnabled()) {
             log.debug(String.format("Found %d results", results.getHitCount()));
         }
@@ -57,7 +59,8 @@ public class AutoCompleteController<T> extends MultiActionController {
             os = response.getOutputStream();
             for (SearchResult<T> result : results.getResults()) {
                 T t = result.getResult();
-                JSONObject jobj = new JSONObject(t);
+                if (log.isDebugEnabled()) { log.debug("Result: " + t); }
+                JSONObject jobj = new JSONObject(t, true);
                 os.println(jobj.toString());
             }
         } finally {

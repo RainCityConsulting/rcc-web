@@ -2,7 +2,7 @@ package com.rcc.web;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class View {
+public class View implements java.io.Serializable {
     private String context;
     private String path;
     private String query;

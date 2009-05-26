@@ -10,6 +10,13 @@ import java.util.List;
 public class HistoryUtils {
     private static final Log log = LogFactory.getLog(HistoryUtils.class);
 
+    public static int last(HttpServletRequest request) {
+        List<View> history = (List<View>) request.getSession().getAttribute(
+                HistoryHandlerInterceptor.attrName);
+        if (history == null) { return -1; }
+        return history.size() - 1;
+    }
+
     public static String redirectPath(HttpServletRequest request, int idx) {
         List<View> history = (List<View>) request.getSession().getAttribute(
                 HistoryHandlerInterceptor.attrName);

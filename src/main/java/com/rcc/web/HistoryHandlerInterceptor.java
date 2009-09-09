@@ -30,7 +30,6 @@ public class HistoryHandlerInterceptor extends HandlerInterceptorAdapter {
             history = new ArrayList<View>();
             session.setAttribute(attrName, history);
         }
-        history.add(new View(request));
         return true;
     }
 
@@ -39,19 +38,44 @@ public class HistoryHandlerInterceptor extends HandlerInterceptorAdapter {
         throws Exception
     {
         if (modelAndView != null) {
-            if (modelAndView.getView() instanceof RedirectView) { return; }
+            if (modelAndView.getView() instanceof RedirectView) {
+                if (log.isDebugEnabled()) {
+                    log.debug("View is RedirectView - will not add history: "
+                            + modelAndView.getView());
+                }
+                return;
+            }
 
             String viewName = modelAndView.getViewName();
-            if (viewName != null && viewName.startsWith("redirect:")) { return; }
+            if (viewName != null && viewName.startsWith("redirect:")) {
+                if (log.isDebugEnabled()) {
+                    log.debug("View name begins with 'redirect:' - will not add history: "
+                            + viewName);
+                }
+                return;
+            }
 
             HttpSession session = request.getSession();
-            if (session == null) { return; }
+            if (session == null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Session is null - will not add history: " + modelAndView);
+                }
+                return;
+            }
+
             List<View> history = (List<View>) session.getAttribute(attrName);
-            if (history == null || history.isEmpty()) { return; }
+            if (history == null) {
+                history = new ArrayList<View>();
+                session.setAttribute(attrName, history);
+            }
+
+            history.add(new View(request));
 
             int idx = history.size() - 1;
             if (idx < 0) { idx = 0; }
-            modelAndView.addObject("h", idx);
+            modelAndView.addObject(attrName, idx);
+        } else {
+            if (log.isDebugEnabled()) { log.debug("ModelAndView is null - will not add history"); }
         }
     }
 }
